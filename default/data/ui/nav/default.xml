@@ -1,0 +1,29 @@
+<nav>
+    <collection label="Home">
+        <collection label="Searches &amp; Reports">
+            <collection label="Reports">
+                <saved source="unclassified" match="report" />
+            </collection>
+            <divider />
+            <saved source="unclassified" />
+        </collection>
+        <a href="/manager/app_template">Configuration</a>
+        <divider />
+        <a href="mailto:XXX@XXX.com">Send Feedback</a>
+        <view name="about" />
+    </collection>
+    
+    <collection label="Dashboards">
+        <view name="dashboard_template" default="true"/>
+    </collection>
+    
+    <collection label="Searches">
+        <a href="/app/app_template/flashtimeline?q=search%20sourcetype=app_template">Timeline</a>
+        <view name="form_search_single_template" />
+    </collection>
+    <!--
+    <view isVisible="false">
+        <view name="overview" default="true" />
+    </view>
+    -->
+</nav>

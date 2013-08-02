@@ -1,0 +1,72 @@
+<view template="dashboard.html">
+    <label>View's Title</label>
+    <module name="AccountBar" layoutPanel="appHeader"/>
+    <module name="AppBar" layoutPanel="navigationHeader"/>
+    <module name="Message" layoutPanel="messaging">
+        <param name="filter">*</param>
+        <param name="clearOnJobDispatch">False</param>
+        <param name="maxSize">1</param>
+    </module>
+    <module name="TitleBar" layoutPanel="navigationHeader">
+        <param name="actionsMenuFilter">dashboard</param>
+        <!-- <param name="showActionsMenu">False</param> -->
+    </module>
+    
+    <module name="GenericHeader" layoutPanel="panel_row1_col1">
+        <param name="label">Overview</param>
+    </module>
+
+    <module name="StaticContentSample" layoutPanel="panel_row1_col1">
+        <param name="text">Description about the dashboard...
+        </param>
+    </module>
+
+    <module name="TimeRangePicker" autoRun="true" layoutPanel="panel_row1_col1">
+        <param name="default">Last 24 hours</param>
+        <param name="searchWhenChanged">True</param>
+        
+        <module name="HiddenSavedSearch" autoRun="true">
+            <param name="savedSearch">saved search name</param>
+            
+            <!-- Chart -->
+            <module name="HiddenPostProcess" autoRun="true" layoutPanel="panel_row2_col1" group="Group name">
+                <param name="search">xxx</param>
+                <module name="JobProgressIndicator" />
+                <module name="HiddenChartFormatter">
+                    <param name="chart">pie</param>
+                    <!--
+                    <param name="chart">column</param>
+                    <param name="chartTitle">xxx</param>
+                    <param name="primaryAxisTitle.text">Time</param>
+                    <param name="secondaryAxisTitle.text">Count</param>
+                    -->
+                    <module name="FlashChart">
+                        <module name="ConvertToDrilldownSearch">
+                            <module name="ViewRedirector">
+                                <param name="viewTarget">flashtimeline</param>
+                            </module>
+                        </module>
+                    </module>
+                </module>
+            </module>
+            
+            <!-- Table -->
+            <module name="HiddenPostProcess" autoRun="true" layoutPanel="panel_row3_col1" group="Group name">
+                <param name="search">xxx</param>
+                <module name="JobProgressIndicator" />
+                <module name="Paginator">
+                    <param name="entityName">results</param>
+                    <module name="SimpleResultsTable">
+                        <param name="entityName">results</param>
+                        <param name="drilldown">row</param>
+                        <module name="ViewRedirector">
+                            <param name="viewTarget">flashtimeline</param>
+                            <param name="popup">true</param>
+                        </module>
+                    </module>
+                </module>
+            </module>
+            
+        </module> <!-- end HiddenSavedSearch -->
+    </module> <!-- end TimeRangePicker -->
+</view>

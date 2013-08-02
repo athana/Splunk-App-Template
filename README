@@ -1,0 +1,24 @@
+################################################################
+#                                                              #
+#  Splunk for XXX App (v0)                                     #
+#                                                              #
+#  Description:                                                #
+#     XXX                                                      #
+#                                                              #
+#  Splunk Version: X.X and Higher                              #
+#  Supported Platform: Linux and Windows                       #
+#  Last Modified: XXX-20XX                                     #
+#                                                              #
+#  Author: Your Name                                           #
+#          your@email.com                                      #
+#                                                              #
+#  For support, please contact: XXX                            #
+#                                                              #
+################################################################
+
+
+The Splunk for XXX
+
+The configuration file (config.ini) is located in the app's "default" directory, which is $SPLUNK_HOME/etc/apps/XXX/default/config.ini . The app relies on the sourcetype=XXX.
+
+NOTE: It may take up to 5 minutes for new data to show up.
