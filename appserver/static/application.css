@@ -1,0 +1,17 @@
+.appLogo {
+	width: 265px;
+	height: 40px;
+	background-image: url(appLogo.png);
+	background-repeat: no-repeat;
+}
+
+.appHeaderWrapper h1 {
+	color: #73a550;
+	line-height: 40px;
+	display: none;
+}
+
+.appHeaderWrapper {
+	background: #5C5C5C;
+	background-image: url();
+}

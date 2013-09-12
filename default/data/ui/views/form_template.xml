@@ -1,0 +1,124 @@
+<view template="dashboard.html" onunloadCancelJobs="False" autoCancelInterval="100">
+  <label>Form Template</label>
+  <module name="AccountBar" layoutPanel="appHeader" />
+  <module name="AppBar" layoutPanel="navigationHeader" />
+  <module name="Message" layoutPanel="messaging">
+    <param name="filter">*</param>
+    <param name="clearOnJobDispatch">False</param>
+    <param name="maxSize">1</param>
+  </module>
+
+  <module name="ServerSideInclude" layoutPanel="panel_row1_col1">
+    <param name="src">form_template.css</param>
+    <module name="StaticContentSample">
+      <param name="text">Enter Param 1 and Param 2. Then pick the time range to display the data.</param>
+    </module>
+  </module>
+
+  <module name="StaticContentSample" layoutPanel="panel_row1_col1_grp3">
+    <param name="text">Time Range</param>
+  </module>
+
+  <module name="TimeRangePicker" layoutPanel="panel_row1_col1_grp3" autoRun="True">
+    <param name="default">Last 7 days</param>
+    <param name="searchWhenChanged">True</param>
+
+    <module name="HiddenSearch">
+      <param name="search">
+        `index` sourcetype=sourcetype1 param1="$param1$" param2="$param2"
+        | bin _time span=5m
+        | stats count by _time field1 field2 field3
+      </param>
+
+      <module name="ExtendedFieldSearch" layoutPanel="panel_row1_col1_grp1">
+        <param name="intention">
+          <param name="name">stringreplace</param>
+          <param name="arg">
+            <param name="param1">
+              <param name="default">value1</param>
+            </param>
+          </param>
+        </param> <!-- end param intention -->
+
+        <param name="replacementMap">
+          <param name="arg">
+            <param name="param1">
+              <param name="value"></param>
+            </param>
+          </param>
+        </param> <!-- end param replacementMap -->
+
+        <param name="field">Param 1</param>
+        <param name="default">value1</param>
+
+        <module name="ExtendedFieldSearch" layoutPanel="panel_row1_col1_grp2">
+          <param name="intention">
+            <param name="name">stringreplace</param>
+            <param name="arg">
+              <param name="param2">
+                <param name="fillOnEmpty">True</param>
+              </param>
+            </param>
+          </param> <!-- end param intention -->
+
+          <param name="replacementMap">
+            <param name="arg">
+              <param name="param2">
+                <param name="value"></param>
+              </param>
+            </param>
+          </param> <!-- end param replacementMap -->
+
+          <param name="field">Param2</param>
+          <param name="default">value2</param>
+
+          <module name="HiddenPostProcess" group="Top 10 X" layoutPanel="panel_row2_col1">
+            <param name="search">top limit=10 field1</param>
+            <module name="JobProgressIndicator" />
+            <module name="HiddenChartFormatter">
+              <param name="chart">pie</param>
+              <module name="JSChart">
+                <module name="ConvertToDrilldownSearch">
+                  <module name="ViewRedirector">
+                    <param name="viewTarget">flashtimeline</param>
+                  </module>
+                </module>
+              </module>
+            </module>
+          </module> <!-- end HiddenPostProcess -->
+
+          <module name="HiddenPostProcess" group="Top 10 Y" layoutPanel="panel_row2_col2">
+            <param name="search">top limit=10 field2</param>
+            <module name="JobProgressIndicator" />
+            <module name="HiddenChartFormatter">
+              <param name="chart">pie</param>
+              <module name="JSChart">
+                <module name="ConvertToDrilldownSearch">
+                  <module name="ViewRedirector">
+                    <param name="viewTarget">flashtimeline</param>
+                  </module>
+                </module>
+              </module>
+            </module>
+          </module>
+
+          <module name="ResultsHeader" layoutPanel="panel_row3_col1">
+            <param name="entityLabel">events</param>
+            <param name="entityName">events</param>
+            <module name="Paginator">
+              <param name="entityName">events</param>
+              <module name="JobProgressIndicator" />
+              <module name="EventsViewer">
+                <param name="segmentation">full</param>
+              </module>
+              <module name="Paginator">
+                <param name="entityName">events</param>
+              </module>
+            </module>
+          </module>
+
+        </module> <!-- end ExtendedFieldSearch -->
+      </module> <!-- end ExtendedFieldSearch -->
+    </module> <!-- end HiddenSearch -->
+  </module> <!-- end TimeRangePicker -->
+</view>

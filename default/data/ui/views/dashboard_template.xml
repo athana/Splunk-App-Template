@@ -1,72 +1,118 @@
 <view template="dashboard.html">
-    <label>View's Title</label>
-    <module name="AccountBar" layoutPanel="appHeader"/>
-    <module name="AppBar" layoutPanel="navigationHeader"/>
-    <module name="Message" layoutPanel="messaging">
-        <param name="filter">*</param>
-        <param name="clearOnJobDispatch">False</param>
-        <param name="maxSize">1</param>
-    </module>
-    <module name="TitleBar" layoutPanel="navigationHeader">
-        <param name="actionsMenuFilter">dashboard</param>
-        <!-- <param name="showActionsMenu">False</param> -->
-    </module>
-    
-    <module name="GenericHeader" layoutPanel="panel_row1_col1">
-        <param name="label">Overview</param>
-    </module>
+  <label>Dashboard Template</label>
+  <module name="AccountBar" layoutPanel="appHeader"/>
+  <module name="AppBar" layoutPanel="navigationHeader"/>
+  <module name="Message" layoutPanel="messaging">
+    <param name="filter">*</param>
+    <param name="clearOnJobDispatch">False</param>
+    <param name="maxSize">1</param>
+  </module>
 
-    <module name="StaticContentSample" layoutPanel="panel_row1_col1">
-        <param name="text">Description about the dashboard...
+  <module name="TitleBar" layoutPanel="navigationHeader">
+    <param name="actionsMenuFilter">dashboard</param>
+    <param name="showActionsMenu">False</param>
+  </module>
+
+  <module name="StaticContentSample" layoutPanel="panel_row1_col1">
+    <param name="text">
+      Select the time range for the dashboard.
+    </param>
+  </module>
+
+  <module name="TimeRangePicker" layoutPanel="panel_row1_col1" autoRun="True">
+    <param name="default">Last 15 minutes</param>
+    <param name="searchWhenChanged">True</param>
+
+    <module name="SearchSelectLister">
+      <param name="label">Index</param>
+      <param name="settingToCreate">index_setting</param>
+      <param name="search">
+        `macro1` | stats values(field1) AS field_name | sort - field_name
+      </param>
+      <param name="searchWhenChanged">True</param>
+      <param name="selected">value1</param>
+      <param name="searchFieldsToDisplay">
+        <list>
+          <param name="label">field_name</param>
+          <param name="value">field_name</param>
+        </list>
+      </param>
+
+      <module name="ConvertToIntention">
+        <param name="settingToConvert">index_setting</param>
+        <param name="intention">
+          <param name="name">stringreplace</param>
+          <param name="arg">
+            <param name="field_name">
+              <param name="fillOnEmpty">True</param>
+              <param name="value">$target$</param>
+            </param>
+          </param>
         </param>
-    </module>
 
-    <module name="TimeRangePicker" autoRun="true" layoutPanel="panel_row1_col1">
-        <param name="default">Last 24 hours</param>
-        <param name="searchWhenChanged">True</param>
-        
-        <module name="HiddenSavedSearch" autoRun="true">
-            <param name="savedSearch">saved search name</param>
-            
-            <!-- Chart -->
-            <module name="HiddenPostProcess" autoRun="true" layoutPanel="panel_row2_col1" group="Group name">
-                <param name="search">xxx</param>
-                <module name="JobProgressIndicator" />
-                <module name="HiddenChartFormatter">
-                    <param name="chart">pie</param>
-                    <!--
-                    <param name="chart">column</param>
-                    <param name="chartTitle">xxx</param>
-                    <param name="primaryAxisTitle.text">Time</param>
-                    <param name="secondaryAxisTitle.text">Count</param>
-                    -->
-                    <module name="FlashChart">
-                        <module name="ConvertToDrilldownSearch">
-                            <module name="ViewRedirector">
-                                <param name="viewTarget">flashtimeline</param>
-                            </module>
-                        </module>
-                    </module>
-                </module>
+        <module name="HiddenSearch">
+          <param name="search">
+            `macro1` field_name="$field_name$"
+            | stats count by _time field1 field2 field3
+          </param>
+
+          <!-- Panel 1 -->
+          <module name="HiddenPostProcess" layoutPanel="panel_row1_col1_grp1">
+            <param name="search">
+              head 1 | stats values(field1) AS label1 values(field2) AS label2 values(field3) AS label3
+              | transpose |
+              rename column AS Properties, "row 1" AS Values
+            </param>
+            <module name="JobProgressIndicator" />
+            <module name="SimpleResultsTable">
+              <param name="displayRowNumbers">off</param>
+              <param name="count">15</param>
             </module>
-            
-            <!-- Table -->
-            <module name="HiddenPostProcess" autoRun="true" layoutPanel="panel_row3_col1" group="Group name">
-                <param name="search">xxx</param>
-                <module name="JobProgressIndicator" />
-                <module name="Paginator">
-                    <param name="entityName">results</param>
-                    <module name="SimpleResultsTable">
-                        <param name="entityName">results</param>
-                        <param name="drilldown">row</param>
-                        <module name="ViewRedirector">
-                            <param name="viewTarget">flashtimeline</param>
-                            <param name="popup">true</param>
-                        </module>
-                    </module>
+          </module> <!-- end HiddenPostProcess -->
+
+          <!-- Panel 2 -->
+          <module name="HiddenPostProcess" layoutPanel="panel_row1_col1_grp2">
+            <param name="search">timechart eval(avg(free_disk_bytes)/avg(total_disk_bytes)*100) AS "%Free Disk"</param>
+            <module name="JobProgressIndicator" />
+            <module name="HiddenChartFormatter">
+              <param name="chart">area</param>
+              <param name="chartTitle">Free Disk</param>
+              <param name="primaryAxisTitle.text">Time</param>
+              <param name="charting.axisY.minimumNumber">0</param>
+              <param name="charting.axisY.maximumNumber">100</param>
+              <param name="chart.nullValueMode">connect</param>
+              <module name="JSChart">
+                <module name="ConvertToDrilldownSearch">
+                  <module name="ViewRedirector">
+                    <param name="viewTarget">flashtimeline</param>
+                  </module>
                 </module>
+              </module>
             </module>
-            
-        </module> <!-- end HiddenSavedSearch -->
-    </module> <!-- end TimeRangePicker -->
+          </module> <!-- end HiddenPostProcess -->
+        </module> <!-- end HiddenSearch -->
+
+        <module name="GenericHeader" layoutPanel="panel_row1_col1_grp1">
+          <param name="label">Stats</param>
+        </module>
+        <module name="StaticContentSample" layoutPanel="panel_row1_col1_grp1">
+          <param name="text">You can select a different time to see the stats by using a pager.</param>
+        </module>
+
+        <module name="HiddenSearch" layoutPanel="panel_row1_col1_grp1">
+          <param name="search">`macro1` class="$field_name$"</param>
+          <module name="Paginator">
+            <param name="entityName">events</param>
+            <param name="count">1</param>
+            <module name="EventsViewer">
+            </module>
+            <module name="Paginator">
+              <param name="entityName">events</param>
+            </module>
+          </module>
+        </module> <!-- end HiddenSearch -->
+
+      </module> <!-- end ConvertToIntention -->
+    </module> <!-- end SearchSelectLister -->
+  </module> <!-- end TimeRangePicker -->
 </view>

@@ -1,0 +1,44 @@
+<setup>
+	<block title="Configure My App">
+		<text>Setup screen for My App</text>
+	</block>
+
+	<block title="My Server" endpoint="myapp/my_custom_endpoint" entity="mystanza">
+		<input field="server">
+			<label>Enter My server (e.g. 10.0.0.1)</label>
+			<type>text</type>
+		</input>
+	</block>
+
+	<block title="LWS Port" endpoint="myapp/my_custom_endpoint" entity="mystanza">
+		<input field="port">
+			<label>Enter My port (e.g. 8888)</label>
+			<type>text</type>
+		</input>
+	</block>
+
+	<block title="Lookup Input Field" endpoint="myapp/my_custom_endpoint" entity="mystanza">
+		<input field="lookup_input_field">
+			<label>Enter input field for lookup (e.g. field1)</label>
+			<type>text</type>
+		</input>
+	</block>
+
+	<block title="Lookup Output Fields" endpoint="myapp/my_custom_endpoint" entity="mystanza">
+		<input field="lookup_output_fields">
+			<label>Enter output fields for lookup output (separated by comma)</label>
+			<type>text</type>
+		</input>
+	</block>
+
+	<block title="Scripted Input: scripted_input.py" endpoint="data/inputs/script" entity="$SPLUNK_HOME/etc/apps/My_App/bin/scripted_input.py">
+		<input field="disabled">
+			<label>Disable $name$</label>
+			<type>bool</type>
+		</input>
+		<input field="interval">
+			<label>Polling interval in second</label>
+			<type>text</type>
+		</input>
+	</block>
+</setup>
